@@ -23,26 +23,31 @@
     // Consulta para obtener los IBIS del contribuyente
     $sql = sprintf(
         "SELECT 
-        U.rol, 
-        U.identificacion, 
-        U.nombre1, 
-        U.apellido1, 
-        U.celular, 
-        T.codEntidad, 
-        T.tipoEntidad, 
-        I.codCatastral, 
-        I.ubicacion, 
-        I.tipoIBI, 
-        I.uso, 
-        P.idTributo, 
-        P.montoPago, 
-        P.fecPago, 
-        P.anioPago, 
-        P.mesPago 
-    FROM USUARIOS U INNER JOIN TRIBUTOS T ON U.identificacion = T.identificacion 
-    LEFT JOIN IBI I ON (T.codEntidad = I.codCatastral AND T.tipoEntidad = 'IBI') 
-    LEFT JOIN pagos P ON T.idTributo = P.idTributo 
-    WHERE U.identificacion = '%s' AND T.tipoEntidad = 'IBI'",$id);
+            U.rol, 
+            U.identificacion, 
+            U.nombre1, 
+            U.apellido1, 
+            U.celular, 
+            T.idTributo,
+            T.codEntidad, 
+            T.tipoEntidad, 
+            I.codCatastral, 
+            I.ubicacion, 
+            I.tipoIBI, 
+            I.uso, 
+            P.montoPago, 
+            P.fecPago, 
+            P.anioPago, 
+            P.mesPago 
+        FROM USUARIOS U 
+        INNER JOIN TRIBUTOS T ON U.identificacion = T.identificacion 
+        LEFT JOIN IBI I ON T.codEntidad = I.codCatastral AND T.tipoEntidad = 'IBI' 
+        LEFT JOIN PAGOS P ON T.idTributo = P.idTributo 
+        WHERE U.identificacion = '%s' 
+        AND T.tipoEntidad = 'IBI' AND T.idTributo = (SELECT MAX(T2.idTributo) FROM TRIBUTOS T2
+                                                     WHERE T2.identificacion = '%s' 
+                                                     AND T2.tipoEntidad = 'IBI' 
+                                                     AND T2.codEntidad = T.codEntidad)",$id,$id);
     $resultado = mysqli_query($conn, $sql);
     $IBIS = [];
     if ($resultado) {
@@ -60,13 +65,13 @@
         U.nombre1, 
         U.apellido1, 
         U.celular, 
+        T.idTributo, 
         T.codEntidad, 
         T.tipoEntidad,  
         I.codCatastral, 
         I.ubicacion, 
         I.tipoIBI, 
         I.uso, 	
-        P.idTributo, 
         P.montoPago, 
         P.fecPago, 
         P.anioPago, 
@@ -74,7 +79,11 @@
     FROM USUARIOS U INNER JOIN TRIBUTOS T ON U.identificacion = T.identificacion 
     LEFT JOIN IBI I ON (T.codEntidad = I.codCatastral AND T.tipoEntidad = 'TA') 
     LEFT JOIN pagos P ON T.idTributo = P.idTributo 
-    WHERE U.identificacion = '%s' AND T.tipoEntidad = 'TA'",$id);
+    WHERE U.identificacion = '%s' 
+        AND T.tipoEntidad = 'TA' AND T.idTributo = (SELECT MAX(T2.idTributo) FROM TRIBUTOS T2
+                                                     WHERE T2.identificacion = '%s' 
+                                                     AND T2.tipoEntidad = 'TA' 
+                                                     AND T2.codEntidad = T.codEntidad)",$id,$id);
     $resultado = mysqli_query($conn, $sql);
     $TAS = [];
     if ($resultado) {
@@ -92,21 +101,26 @@
         U.nombre1, 
         U.apellido1, 
         U.celular, 
+        T.idTributo, 
         T.codEntidad, 
         T.tipoEntidad, 
         L.codLote, 
         L.cementerio, 
         L.sector, 
         L.categoria, 
-        P.idTributo, 
         P.montoPago, 
         P.fecPago, 
         P.anioPago, 
         P.mesPago 
-    FROM USUARIOS U INNER JOIN TRIBUTOS T ON U.identificacion = T.identificacion 
+    FROM USUARIOS U 
+    INNER JOIN TRIBUTOS T ON U.identificacion = T.identificacion 
     LEFT JOIN LOTES L ON T.codEntidad = L.codLote AND T.tipoEntidad = 'LOTE' 
-    LEFT JOIN pagos P ON T.idTributo = P.idTributo 
-    WHERE U.identificacion = '%s' AND T.tipoEntidad = 'LOTE'",$id);
+    LEFT JOIN PAGOS P ON T.idTributo = P.idTributo 
+    WHERE U.identificacion = '%s' 
+        AND T.tipoEntidad = 'LOTE' AND T.idTributo = (SELECT MAX(T2.idTributo) FROM TRIBUTOS T2
+                                                     WHERE T2.identificacion = '%s' 
+                                                     AND T2.tipoEntidad = 'LOTE' 
+                                                     AND T2.codEntidad = T.codEntidad)",$id,$id);
     $resultado = mysqli_query($conn, $sql);
     $LOTES = [];
     if ($resultado) {
@@ -124,11 +138,11 @@
         U.nombre1, 
         U.apellido1, 
         U.celular, 
+        T.idTributo,
         T.codEntidad, 
         T.tipoEntidad, 
         F.codFinca, 
         F.comunidad,
-        P.idTributo, 
         P.montoPago, 
         P.fecPago, 
         P.anioPago, 
@@ -136,7 +150,11 @@
     FROM USUARIOS U INNER JOIN TRIBUTOS T ON U.identificacion = T.identificacion 
     LEFT JOIN FIERROS F ON T.codEntidad = F.codFinca AND T.tipoEntidad = 'FIERRO' 
     LEFT JOIN pagos P ON T.idTributo = P.idTributo 
-    WHERE U.identificacion = '%s' AND T.tipoEntidad = 'FIERRO'",$id);
+    WHERE U.identificacion = '%s' 
+        AND T.tipoEntidad = 'FIERRO' AND T.idTributo = (SELECT MAX(T2.idTributo) FROM TRIBUTOS T2
+                                                     WHERE T2.identificacion = '%s' 
+                                                     AND T2.tipoEntidad = 'FIERRO' 
+                                                     AND T2.codEntidad = T.codEntidad)",$id,$id);
     $resultado = mysqli_query($conn, $sql);
     $FIERROS = [];
     if ($resultado) {
@@ -178,8 +196,9 @@
             </tr>
             <tr>
                 <th class="col-1">Tributo</th>
+                <th class="col-1">Id.Tributo</th>
                 <th class="col-1">C.Catastral</th>
-                <th class="col-3">Ubicacion</th>
+                <th class="col-2">Ubicacion</th>
                 <th class="col-1">Tipo IBI</th>
                 <th class="col-1">Uso</th>
                 <th class="bg-secondary col-1">Monto</th>
@@ -191,8 +210,9 @@
         <?php foreach ($IBIS as $IBI): ?>
             <tr>
                 <td class="col-1"><?php echo htmlspecialchars($IBI['tipoEntidad']); ?></td> 
+                <td class="col-1"><?php echo htmlspecialchars($IBI['idTributo']); ?></td> 
                 <td class="col-1"><?php echo htmlspecialchars($IBI['codEntidad']); ?></td> 
-                <td class="col-3"><?php echo htmlspecialchars($IBI['ubicacion']); ?></td> 
+                <td class="col-2"><?php echo htmlspecialchars($IBI['ubicacion']); ?></td> 
                 <td class="col-1"><?php echo htmlspecialchars($IBI['tipoIBI']); ?></td> 
                 <td class="col-1"><?php echo htmlspecialchars($IBI['uso']); ?></td> 
                 <td class="bg-secondary col-1"><?php echo htmlspecialchars($IBI['montoPago']); ?></td> 
@@ -213,8 +233,9 @@
             </tr>
             <tr>
                 <th class="col-1">Tributo</th>
+                <th class="col-1">Id.Tributo</th>
                 <th class="col-1">C.Catastral</th>
-                <th class="col-3">Ubicacion</th>
+                <th class="col-2">Ubicacion</th>
                 <th class="col-1">Tipo IBI</th>
                 <th class="col-1">Uso</th>
                 <th class="bg-secondary col-1">Monto</th>
@@ -226,8 +247,9 @@
         <?php foreach ($TAS as $TA): ?>
             <tr>
                 <td class="col-1"><?php echo htmlspecialchars($TA['tipoEntidad']); ?></td> 
+                <td class="col-1"><?php echo htmlspecialchars($TA['idTributo']); ?></td> 
                 <td class="col-1"><?php echo htmlspecialchars($TA['codEntidad']); ?></td> 
-                <td class="col-3"><?php echo htmlspecialchars($TA['ubicacion']); ?></td> 
+                <td class="col-2"><?php echo htmlspecialchars($TA['ubicacion']); ?></td> 
                 <td class="col-1"><?php echo htmlspecialchars($TA['tipoIBI']); ?></td> 
                 <td class="col-1"><?php echo htmlspecialchars($TA['uso']); ?></td> 
                 <td class="bg-secondary col-1"><?php echo htmlspecialchars($TA['montoPago']); ?></td> 
@@ -248,8 +270,9 @@
             </tr>
             <tr>
                 <th class="col-1">Tributo</th>
+                <th class="col-1">Id.Tributo</th>
                 <th class="col-1">C.Lote</th>
-                <th class="col-3">Cementerio</th>
+                <th class="col-1">Cementerio</th>
                 <th class="col-1">Sector</th>
                 <th class="col-1">Categoria</th>
                 <th class="bg-secondary col-1">Monto</th>
@@ -261,8 +284,9 @@
         <?php foreach ($LOTES as $LOTE): ?>
             <tr>
                 <td class="col-1"><?php echo htmlspecialchars($LOTE['tipoEntidad']); ?></td> 
+                <td class="col-1"><?php echo htmlspecialchars($LOTE['idTributo']); ?></td> 
                 <td class="col-1"><?php echo htmlspecialchars($LOTE['codEntidad']); ?></td> 
-                <td class="col-3"><?php echo htmlspecialchars($LOTE['cementerio']); ?></td> 
+                <td class="col-1"><?php echo htmlspecialchars($LOTE['cementerio']); ?></td> 
                 <td class="col-1"><?php echo htmlspecialchars($LOTE['sector']); ?></td> 
                 <td class="col-1"><?php echo htmlspecialchars($LOTE['categoria']); ?></td> 
                 <td class="bg-secondary col-1"><?php echo htmlspecialchars($LOTE['montoPago']); ?></td> 
@@ -283,6 +307,7 @@
             </tr>
             <tr>
                 <th class="col-1">Tributo</th>
+                <th class="col-1">Id.Tributo</th>
                 <th class="col-1">C.Finca</th>
                 <th class="col-1">Comunidad</th>
                 <th class="bg-secondary col-1">Monto</th>
@@ -294,11 +319,12 @@
         <?php foreach ($FIERROS as $FIERRO): ?>
             <tr>
                 <td class="col-1"><?php echo htmlspecialchars($FIERRO['tipoEntidad']); ?></td> 
+                <td class="col-1"><?php echo htmlspecialchars($FIERRO['idTributo']); ?></td> 
                 <td class="col-1"><?php echo htmlspecialchars($FIERRO['codEntidad']); ?></td> 
                 <td class="col-1"><?php echo htmlspecialchars($FIERRO['comunidad']); ?></td> 
-                <td class="bg-secondary col-1"><?php echo htmlspecialchars($LOTE['montoPago']); ?></td> 
-                <td class="bg-secondary col-1"><?php echo htmlspecialchars($LOTE['fecPago']); ?></td> 
-                <td class="bg-secondary col-1"><?php echo htmlspecialchars($LOTE['anioPago']); ?></td>
+                <td class="bg-secondary col-1"><?php echo htmlspecialchars($FIERRO['montoPago']); ?></td> 
+                <td class="bg-secondary col-1"><?php echo htmlspecialchars($FIERRO['fecPago']); ?></td> 
+                <td class="bg-secondary col-1"><?php echo htmlspecialchars($FIERRO['anioPago']); ?></td>
             </tr>
             <?php endforeach; ?>
         </tbody>
