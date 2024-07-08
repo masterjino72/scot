@@ -12,7 +12,9 @@
                     echo '<p id="Message" class="text-danger fw-bold">USUARIO NO EXISTE</p>';
                 } elseif ($_GET['mensaje'] == 'contrasenia_equivocada') {
                     echo '<p id="Message" class="text-danger fw-bold">CONTRASEÑA INCORRECTA</p>';
-                } elseif ($_GET['mensaje'] == 'error_login') {
+                }elseif ($_GET['mensaje'] == 'usuario_inactivo') {
+                  echo '<p id="Message" class="text-danger fw-bold">USUARIO DE BAJA<br>¡¡COMUNÍQUESE CON EL ADMINISTRADOR!!</p>';
+                }elseif ($_GET['mensaje'] == 'error_login') {
                     echo '<p id="Message" class="text-danger fw-bold">NO SE PUDO LOGEAR</p>';
                 }
             }
@@ -51,6 +53,7 @@
     var Message = document.getElementById('Message');
     if (Message) {
       Message.style.display = 'none';
+      window.location.href = 'index.php';
     }
   }, 4000);
 </script>
