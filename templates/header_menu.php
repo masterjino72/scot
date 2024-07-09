@@ -140,7 +140,8 @@ if (!isset($_SESSION['usuario'])) {
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown3">
                         <li><a class="dropdown-item" href="/pages/lotes/lotes.php">Lotes</a></li>
-                        <li><a class="dropdown-item" href="/pages/lotes/contribuyentes.php">Lote-Contribuyente</a></li>
+                        <li><a class="dropdown-item" href="/pages/lotes/tablaLoteContribuyente.php">Lote-Contribuyente</a></li>
+                        <li><a class="dropdown-item" href="/pages/lotes/tablaDeudoContribuyente.php">Deudo-Contribuyente</a></li>
                         <li><a class="dropdown-item" href="#">Reportes</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><form action="" method="POST">

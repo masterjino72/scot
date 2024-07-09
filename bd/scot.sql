@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 25-06-2024 a las 16:21:52
+-- Tiempo de generación: 08-07-2024 a las 20:30:46
 -- Versión del servidor: 5.7.31
 -- Versión de PHP: 7.3.21
 
@@ -358,9 +358,10 @@ CREATE TABLE IF NOT EXISTS `fierros` (
 --
 
 INSERT INTO `fierros` (`codFinca`, `comunidad`, `fecRegistro`, `estadoFierro`) VALUES
-('9874', 'SASLE 1', '2024-05-06', 'ACTIVO'),
-('1152', 'LAS LOMAS', '2024-05-06', 'INACTIVO'),
-('9156', 'PUEBLO NUEVO', '2024-05-02', 'ACTIVO');
+('9874', 'SASLE 1', '2024-05-06', 'INACTIVO'),
+('1152', 'LAS LOMAS', '2024-05-01', 'INACTIVO'),
+('9156', 'PUEBLO NUEVO', '2024-05-02', 'ACTIVO'),
+('2016', 'EL SARDINAL', '2024-07-03', 'ACTIVO');
 
 -- --------------------------------------------------------
 
@@ -373,26 +374,31 @@ CREATE TABLE IF NOT EXISTS `ibi` (
   `codIBI` int(11) NOT NULL AUTO_INCREMENT,
   `codCatastral` varchar(30) NOT NULL,
   `ubicacion` varchar(100) DEFAULT NULL,
+  `construccion` varchar(50) DEFAULT NULL,
+  `tipoIBI` enum('URBANO','RURAL','ESPECIAL') NOT NULL,
+  `uso` varchar(50) DEFAULT NULL,
+  `TA` enum('S','N') DEFAULT NULL,
+  `barrido` enum('S','N') DEFAULT NULL,
+  `valorCatastral` decimal(10,2) NOT NULL,
   `finca` varchar(100) DEFAULT NULL,
   `folio` int(11) DEFAULT NULL,
   `tomo` int(11) DEFAULT NULL,
   `asiento` int(11) DEFAULT NULL,
-  `valorCatastral` decimal(10,2) NOT NULL,
-  `construccion` varchar(50) DEFAULT NULL,
   `estadoIBI` enum('ACTIVO','INACTIVO') DEFAULT 'ACTIVO',
   PRIMARY KEY (`codIBI`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `ibi`
 --
 
-INSERT INTO `ibi` (`codIBI`, `codCatastral`, `ubicacion`, `finca`, `folio`, `tomo`, `asiento`, `valorCatastral`, `construccion`, `estadoIBI`) VALUES
-(1, '0604U003043014', 'ESQUINA SUR-ESTE DEL C/S BUENA VIDA', 'Finca 1', 1, 1, 1, '100000.00', 'CASA', 'ACTIVO'),
-(2, '0604U000012455', 'FRENTE AL PUENTE LOS ENAMORADOS', 'Finca 2', 2, 2, 2, '150000.00', 'CASA', 'ACTIVO'),
-(3, '0604R330006971', 'COLEGIO RUBEN DARIO, 50 VRS SUR', 'Finca 3', 3, 3, 3, '120000.00', 'BODEGA', 'ACTIVO'),
-(4, '0604R410002950', 'SILAIS, 2C, AL OESTE, 20 VRS. NORTE', 'Finca 4', 4, 4, 4, '200000.00', 'LOTE VALDIO', 'ACTIVO'),
-(5, '0604U233007982', 'IGLESIA RESTAURACION, 50 VRS. ESTE', 'Finca 5', 5, 5, 5, '180000.00', 'CASA', 'ACTIVO');
+INSERT INTO `ibi` (`codIBI`, `codCatastral`, `ubicacion`, `construccion`, `tipoIBI`, `uso`, `TA`, `barrido`, `valorCatastral`, `finca`, `folio`, `tomo`, `asiento`, `estadoIBI`) VALUES
+(1, '0604U003043014', 'ESQUINA SUR-ESTE DEL C/S BUENA VIDA', 'CASA', 'URBANO', 'CASA DE HABITACION', 'S', 'S', '100000.00', 'Finca 1', 1, 1, 1, 'ACTIVO'),
+(2, '0604U000012455', 'FRENTE AL PUENTE LOS ENAMORADOS', 'CASA', 'URBANO', 'CASA DE HABITACION', 'S', 'S', '150000.00', 'Finca 2', 2, 2, 2, 'ACTIVO'),
+(3, '0604R330006971', 'COLEGIO RUBEN DARIO, 50 VRS SUR', 'BODEGON', 'RURAL', 'ACOPIO DE CAFÉ', 'N', 'N', '120000.00', 'Finca 3', 3, 3, 3, 'ACTIVO'),
+(4, '0604R410002950', 'SILAIS, 2C, AL OESTE, 20 VRS. NORESTE', 'LOTE VALDIO', 'RURAL', 'LOTE', 'S', 'N', '200000.00', 'Finca 4', 40, 45, 44, 'ACTIVO'),
+(5, '0604U233007982', 'IGLESIA RESTAURACION, 50 VRS. ESTE', 'CASA', 'URBANO', 'CASA DE HABITACION', 'S', 'N', '180000.00', 'Finca 5', 5, 5, 5, 'ACTIVO'),
+(6, '0604U003011111', 'JINOTEGA NORTE', 'CASA', 'URBANO', 'CASA DESHABITADA', 'S', 'N', '85000.00', '45', 11, 25, 8, 'ACTIVO');
 
 -- --------------------------------------------------------
 
@@ -421,12 +427,12 @@ CREATE TABLE IF NOT EXISTS `lotes` (
 --
 
 INSERT INTO `lotes` (`codLote`, `cementerio`, `sector`, `categoria`, `fecRegistro`, `medidas`, `lindeNorte`, `lindeSur`, `lindeEste`, `lindeOeste`, `estadoLote`) VALUES
-('CV8890', 'VIEJO', 'NORTE', 'A', '2024-05-06', '1.5x2.5m', 'Calle', 'Callejon', 'CV8891', 'CV8889', 'OCUPADO'),
+('CV8890', 'VIEJO', 'NORTE', 'A', '2024-05-06', '1.5x2.5m', 'Calle', 'Callejon', 'CV8891', 'CV8889', 'LIBRE'),
 ('CV1020', 'VIEJO', 'NORTE', 'B', '2024-05-06', '1.5x2.0m', 'CV1005', 'CV2006', 'CV1019', 'CV1021', 'OCUPADO'),
-('CV3055', 'VIEJO', 'SUR', 'C', '2024-05-06', '2.5x25m', 'Callejon', 'Rio', 'CV3054', 'CV3056', 'LIBRE'),
+('CV3055', 'VIEJO', 'SUR', 'C', '2024-05-06', '2.5x25m', 'Callejon', 'Rio', 'CV3054', 'CV3056', 'OCUPADO'),
 ('CN0151', 'NUEVO', 'SUR-ESTE', 'A', '2024-05-06', '1.0 x2.0m', 'Cerro', 'Predio', 'Calle', 'CN0150', 'OCUPADO'),
 ('CV4081', 'VIEJO', 'OESTE', 'B', '2024-05-06', '1.5x2.0m', 'CV4208', 'CV41109', 'CV4080', 'CV4082', 'OCUPADO'),
-('CN1020', 'NUEVO', 'NORTE', 'C', '2024-06-19', '2M X 3M', 'Callejon', 'Callejon', 'Terreno en espera', 'Terreno en espera', 'OCUPADO');
+('CN1020', 'NUEVO', 'NORTE', 'C', '2024-06-19', '2M X 3.5M', 'Callejon', 'Callejon', 'Terreno en espera', 'Terreno en espera', 'OCUPADO');
 
 -- --------------------------------------------------------
 
@@ -462,31 +468,32 @@ CREATE TABLE IF NOT EXISTS `pagos` (
   `idPago` int(11) NOT NULL AUTO_INCREMENT,
   `identificacion` varchar(30) NOT NULL,
   `idTributo` int(11) NOT NULL,
-  `fecPago` date NOT NULL,
-  `montoPago` decimal(10,2) NOT NULL,
+  `fecPago` date DEFAULT NULL,
+  `montoPago` decimal(10,2) DEFAULT NULL,
   `anioPago` int(11) DEFAULT NULL,
   `mesPago` int(11) DEFAULT NULL,
   PRIMARY KEY (`idPago`),
   KEY `cedula_contribuyente` (`identificacion`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `pagos`
 --
 
 INSERT INTO `pagos` (`idPago`, `identificacion`, `idTributo`, `fecPago`, `montoPago`, `anioPago`, `mesPago`) VALUES
-(1, '241-092888-0002F', 4, '2024-05-06', '1500.00', 2024, NULL),
-(2, '401-071690-0002Q', 14, '2024-05-07', '200.00', 2024, NULL),
-(3, '241-052782-0001C', 1, '2024-05-08', '1250.00', 2023, NULL),
-(4, '241-061483-0001M', 5, '2024-05-09', '700.00', 2024, NULL),
+(1, '241-201076-0000P', 4, '2024-05-06', '1500.00', 2024, NULL),
+(2, '123', 14, '2024-05-07', '200.00', 2024, NULL),
+(3, '241-151090-0002C', 1, '2024-05-08', '1250.00', 2023, NULL),
+(4, '001-291275-0008Q', 5, '2024-05-09', '700.00', 2024, NULL),
 (5, '242-073079-0009P', 12, '2024-05-10', '100.00', 2024, NULL),
-(6, '241-052782-0001C', 2, '2024-05-07', '850.00', 2023, NULL),
-(7, '001-111190-0004A', 15, '2024-05-08', '250.00', 2024, NULL),
-(8, '241-052782-0001C', 3, '2024-05-06', '1500.00', 2023, NULL),
-(9, '241-061483-0001M', 10, '2024-05-07', '450.00', 2024, 2),
-(10, '241-040381-0001G', 11, '2024-05-06', '300.00', 2022, NULL),
-(12, '241-061483-0001M', 9, '2024-05-02', '70.00', 2024, 2),
-(13, '241-061483-0001M', 5, '2024-05-08', '900.00', 2023, NULL);
+(6, '241-151090-0002C', 2, '2024-05-07', '850.00', 2023, NULL),
+(7, '001-150855-0023S', 15, '2024-05-08', '250.00', 2024, NULL),
+(8, '241-151090-0002C', 3, '2024-05-06', '1500.00', 2023, NULL),
+(9, '001-150855-0023S', 10, '2024-05-07', '450.00', 2024, 2),
+(10, '241-151088-0000L', 11, '2024-05-06', '300.00', 2022, NULL),
+(12, '001-291275-0008Q', 9, '2024-05-02', '70.00', 2024, 2),
+(13, '001-150855-0023S', 6, '2024-05-08', '900.00', 2023, NULL),
+(14, '241-151088-0000L', 37, '2024-06-07', '300.00', 2023, NULL);
 
 -- --------------------------------------------------------
 
@@ -551,7 +558,7 @@ DROP TABLE IF EXISTS `ta`;
 CREATE TABLE IF NOT EXISTS `ta` (
   `codTA` int(11) NOT NULL AUTO_INCREMENT,
   `codCatastral` varchar(30) DEFAULT NULL,
-  `tipoTA` enum('URBANO','RURAL') DEFAULT NULL,
+  `tipoVivienda` enum('URBANO','RURAL') DEFAULT NULL,
   `estadoTA` enum('ACTIVO','INACTIVO') DEFAULT NULL,
   PRIMARY KEY (`codTA`),
   KEY `codigo_catastral` (`codCatastral`)
@@ -561,10 +568,10 @@ CREATE TABLE IF NOT EXISTS `ta` (
 -- Volcado de datos para la tabla `ta`
 --
 
-INSERT INTO `ta` (`codTA`, `codCatastral`, `tipoTA`, `estadoTA`) VALUES
-(1, '0604U000012455', 'URBANO', 'ACTIVO'),
-(2, '0604U003043014', 'URBANO', 'ACTIVO'),
-(3, '0604R330006971', 'URBANO', 'ACTIVO'),
+INSERT INTO `ta` (`codTA`, `codCatastral`, `tipoVivienda`, `estadoTA`) VALUES
+(1, '0604U003043014', 'URBANO', 'ACTIVO'),
+(2, '0604U000012455', 'URBANO', 'ACTIVO'),
+(3, '0604R330006971', 'RURAL', 'ACTIVO'),
 (4, '0604R410002950', 'RURAL', 'INACTIVO'),
 (5, '0604U233007982', 'URBANO', 'ACTIVO');
 
@@ -583,30 +590,40 @@ CREATE TABLE IF NOT EXISTS `tributos` (
   PRIMARY KEY (`idTributo`),
   KEY `cedula_contribuyente` (`identificacion`),
   KEY `codigo_entidad` (`codEntidad`)
-) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=38 DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `tributos`
 --
 
 INSERT INTO `tributos` (`idTributo`, `identificacion`, `tipoEntidad`, `codEntidad`) VALUES
-(1, '241-151090-0002C', 'IBI', '1'),
-(2, '241-151090-0002C', 'IBI', '2'),
-(3, '241-151090-0002C', 'IBI', '3'),
-(4, '241-201076-0000P', 'IBI', '4'),
-(5, '001-291275-0008Q', 'IBI', '5'),
-(6, '241-151090-0002C', 'TA', '1'),
-(7, '241-151090-0002C', 'TA', '2'),
-(8, '241-151090-0002C', 'TA', '3'),
-(9, '001-291275-0008Q', 'TA', '5'),
-(10, '001-150855-0023S', 'LOTE', 'CV8890'),
+(1, '241-151090-0002C', 'IBI', '0604U003043014'),
+(2, '241-151090-0002C', 'IBI', '0604U000012455'),
+(3, '241-151090-0002C', 'IBI', '0604R330006971'),
+(4, '241-201076-0000P', 'IBI', '0604R410002950'),
+(5, '001-291275-0008Q', 'IBI', '0604U233007982'),
+(6, '241-151090-0002C', 'TA', '0604U003043014'),
+(7, '241-151090-0002C', 'TA', '0604U000012455'),
+(8, '241-151090-0002C', 'TA', '0604R330006971'),
+(9, '001-291275-0008Q', 'TA', '0604U233007982'),
+(10, '001-150855-0023S', 'LOTE', 'CV8890-B'),
 (11, '241-151088-0000L', 'LOTE', 'CV1020'),
 (12, '001-291275-0008Q', 'LOTE', 'CN0151'),
 (13, '241-151155-0000G', 'FIERRO', '9874'),
 (14, '123', 'FIERRO', '1152'),
 (15, '001-150855-0023S', 'LOTE', 'CV4081'),
 (16, '241-201076-0000P', 'FIERRO', '9156'),
-(19, '241-151090-0002C', 'LOTE', 'CN1020');
+(19, '241-151090-0002C', 'LOTE', 'CN1020'),
+(22, '001-291275-0008Q', 'LOTE', 'CV3055'),
+(23, '001-150855-0023S', 'FIERRO', '2016'),
+(24, '241-151088-0000L', 'IBI', '0604R410002950-B'),
+(31, '001-150855-0023S', 'IBI', '0604U003011111'),
+(26, '241-151088-0000L', 'TA', '0604U003011111'),
+(32, '001-150855-0023S', 'TA', '0604U003011111'),
+(29, '241-151088-0000L', 'IBI', '0604U003011111'),
+(37, '241-151088-0000L', 'LOTE', 'CV1020'),
+(35, '001-291275-0008Q', 'IBI', '0604U003011111'),
+(36, '001-291275-0008Q', 'TA', '0604U003011111');
 
 -- --------------------------------------------------------
 
@@ -646,7 +663,7 @@ INSERT INTO `usuarios` (`idUsuario`, `usuario`, `password`, `rol`, `identificaci
 (19, 'JUANPEREZ', '$2b$12$sBE/u1fNA4mNNDXadk7lNuNo9W43bo9o6owe3P8YJ67litvsn1UM.', 'CONTRIBUYENTE', '241-151090-0002C', 'JUAN', 'CARLOS', 'PEREZ', 'GARCIA', 'JAPGJINOTEGA90@HOTMAIL.COM', '8815-5591', 'JINOTEGA', 'A'),
 (31, 'ADMIN', '$2y$10$Egyih7NgzY2pgFTue2SfOO9fwvSkc2KV7b4j/u8czZZzoDo8mBrZi', 'ADMINISTRADOR', '241-281172-0005M', 'JAIRO', 'ANTONIO', 'LAGUNA', 'CASTILLO', 'MASTERJINO72@GMAIL.COM', '8825 - 2163', 'JINOTEGA', 'A'),
 (34, 'CARLOSHURTADO', '$2y$10$v.czZJSQbC9CmdlTN8JeAuR3YaujOoIMVqp7h0kvv/9SHAzmmnCD.', 'CONTRIBUYENTE', '001-291275-0008Q', 'CARLOS', 'ANDRES', 'HURTADO', 'ZELAYA', 'JUANJPEREZ@CORREO.COM', '8850-7439', 'LEON', 'A'),
-(37, 'OSCARRUGAMA', '$2y$10$9MSiEwaapv5v5Kd4AFbD/.JCGi7hptXLv6Aij6zGvzPkERYjCPVoK', 'CONTRIBUYENTE', '241-151155-0000G', 'OSCAR', 'ANTONIO', 'RUGAMA', 'DIAZ', 'ORUGAAMAD55@GMAIL.COM', '8825-1570', 'JINOTEGA', 'B'),
+(37, 'OSCARRUGAMA', '$2y$10$9MSiEwaapv5v5Kd4AFbD/.JCGi7hptXLv6Aij6zGvzPkERYjCPVoK', 'CONTRIBUYENTE', '241-151155-0000G', 'OSCAR', 'ANTONIO', 'RUGAMA', 'DIAZ', 'ORUGAAMAD55@GMAIL.COM', '8825-1575', 'JINOTEGA', 'B'),
 (40, 'ALMAIRIS', '$2y$10$Hro3L36EwrIBP57xlEg03ut.5jFa8mtLPUMj2UQqu0SR8b/CAOaoO', 'CONTRIBUYENTE', '241-151088-0000L', 'ALMA', 'IRIS', 'RUGAMA', 'ROBLETO', 'ALMAIRISCAME@HOTMAIL.COM', '8815-6625', 'JINOTEGA', 'A'),
 (41, 'DEMO', '$2y$10$m/xCzNiK05iq3HE1GGNNVuLSt2LClpBTU7jjx5KHA1TfmJSGrHi1G', 'CONTRIBUYENTE', '123', 'DEMO', '', 'PRUEBA', '', 'DEMO@CORREO.COM', '123123123', 'MANAGUA', 'A');
 COMMIT;
